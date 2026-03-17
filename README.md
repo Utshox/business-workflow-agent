@@ -151,3 +151,7 @@ kubectl apply -f k8s/
 ├── Dockerfile          # Multi-stage (api + fine-tune)
 └── docker-compose.yml
 ```
+
+## Author
+
+- [Utshox](https://github.com/Utshox)

@@ -2,6 +2,9 @@
 name = "business-workflow-agent"
 version = "0.1.0"
 description = "Multi-step business workflow agent with tool integration, human-in-the-loop approval, and fine-tuning evaluation"
+authors = [
+    { name = "Utshox", email = "32913328+Utshox@users.noreply.github.com" },
+]
 requires-python = ">=3.11,<3.14"
 dependencies = [
     "langgraph>=0.2.0",
