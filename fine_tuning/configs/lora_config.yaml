@@ -1,0 +1,28 @@
+# LoRA fine-tuning configuration
+model:
+  base_model: "microsoft/phi-2"  # Small enough to train locally; swap for Mistral-7B on GPU
+  max_length: 512
+  load_in_4bit: true
+
+lora:
+  r: 16
+  lora_alpha: 32
+  lora_dropout: 0.05
+  target_modules: ["q_proj", "v_proj", "k_proj", "o_proj"]
+  task_type: "CAUSAL_LM"
+
+training:
+  num_epochs: 3
+  batch_size: 4
+  gradient_accumulation_steps: 4
+  learning_rate: 2.0e-4
+  warmup_ratio: 0.1
+  weight_decay: 0.01
+  max_grad_norm: 1.0
+  logging_steps: 10
+  save_steps: 50
+  output_dir: "./fine_tuning/output"
+
+evaluation:
+  metrics: ["accuracy", "f1", "json_validity", "action_match"]
+  test_file: "./fine_tuning/data/test.json"

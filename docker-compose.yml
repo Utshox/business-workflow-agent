@@ -1,0 +1,35 @@
+services:
+  agent-api:
+    build:
+      context: .
+      target: api
+    ports:
+      - "8000:8000"
+    env_file: .env
+    volumes:
+      - chroma-data:/app/data/chroma
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  fine-tune:
+    build:
+      context: .
+      target: fine-tune
+    env_file: .env
+    volumes:
+      - ./fine_tuning/output:/app/fine_tuning/output
+    profiles:
+      - training
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+
+volumes:
+  chroma-data:

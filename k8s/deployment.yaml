@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: workflow-agent
+  labels:
+    app: workflow-agent
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: workflow-agent
+  template:
+    metadata:
+      labels:
+        app: workflow-agent
+    spec:
+      containers:
+        - name: agent-api
+          image: workflow-agent:latest
+          ports:
+            - containerPort: 8000
+          envFrom:
+            - secretRef:
+                name: workflow-agent-secrets
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "250m"
+            limits:
+              memory: "1Gi"
+              cpu: "500m"
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 15
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 30
+            periodSeconds: 30
+          volumeMounts:
+            - name: chroma-storage
+              mountPath: /app/data/chroma
+      volumes:
+        - name: chroma-storage
+          persistentVolumeClaim:
+            claimName: chroma-pvc
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: chroma-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi

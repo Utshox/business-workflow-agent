@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+.env
+data/
+fine_tuning/output/
+fine_tuning/data/*.json
+eval/*_report.json
+*.egg-info/
+dist/
+.venv/
